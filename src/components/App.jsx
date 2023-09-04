@@ -9,7 +9,7 @@ const Reviews = lazy(() => import('./Reviews'));
 
 const App = () => {
   return (
-    <Router basename="/">
+    <Router basename="/"> {/* Оновлено basename */}
       <div>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
