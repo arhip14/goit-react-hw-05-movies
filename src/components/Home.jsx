@@ -6,11 +6,19 @@ import { toast } from 'react-toastify';
 
 const HomeContainer = styled.div`
   text-align: center;
+  background: linear-gradient(to bottom, #333, #000);
+  padding: 20px;
+  color: white;
+  min-height: 100vh; 
+    text-align: center;
+  font-family: 'Arial', sans-serif; 
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
+  font-size: 48px;
   margin-bottom: 20px;
+  text-transform: uppercase;
+  color: #fff; 
 `;
 
 const SearchBar = styled.input`
@@ -40,9 +48,36 @@ const MovieContainer = styled.div`
 const MovieItem = styled.div`
   width: calc(33.33% - 20px);
   margin-bottom: 20px;
-  background-color: #f0f0f0;
+  background-color: #333;
   padding: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+const MovieTitle = styled.h3`
+  font-size: 20px;
+  font-weight: bold;
+  color: white; 
+  text-transform: uppercase;
+  margin: 10px 0;
+  user-select: none; 
+  text-decoration: none; 
+`;
+
+const MovieImage = styled.img`
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+`;
+
+const MovieLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
 `;
 
 const Home = () => {
@@ -100,26 +135,24 @@ const Home = () => {
         {searchResults.length > 0
           ? searchResults.map((movie) => (
               <MovieItem key={movie.id}>
-                <Link to={`/movies/${movie.id}`}>
-                  <img
+                <MovieLink to={`/movies/${movie.id}`}>
+                  <MovieImage
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     alt={movie.title}
-                    style={{ width: '100%', height: 'auto' }}
                   />
-                  <h3>{movie.title}</h3>
-                </Link>
+                  <MovieTitle>{movie.title}</MovieTitle>
+                </MovieLink>
               </MovieItem>
             ))
           : trendingMovies.map((movie) => (
               <MovieItem key={movie.id}>
-                <Link to={`/movies/${movie.id}`}>
-                  <img
+                <MovieLink to={`/movies/${movie.id}`}>
+                  <MovieImage
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     alt={movie.title}
-                    style={{ width: '100%', height: 'auto' }}
                   />
-                  <h3>{movie.title}</h3>
-                </Link>
+                  <MovieTitle>{movie.title}</MovieTitle>
+                </MovieLink>
               </MovieItem>
             ))}
       </MovieContainer>

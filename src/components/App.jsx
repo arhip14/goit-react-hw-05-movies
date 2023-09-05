@@ -1,15 +1,18 @@
 import React, { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import Header from './Header';
 
 const Home = lazy(() => import('./Home'));
 const Movies = lazy(() => import('./Movies'));
 const MovieDetails = lazy(() => import('./MovieDetails'));
 const Cast = lazy(() => import('./Cast'));
 const Reviews = lazy(() => import('./Reviews'));
+const SearchResults = lazy(() => import('./SearchResults')); 
 
 const App = () => {
   return (
     <div>
+      <Header />
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -17,6 +20,8 @@ const App = () => {
           <Route path="/movies/:movieId" element={<MovieDetails />} />
           <Route path="/movies/:movieId/cast" element={<Cast />} />
           <Route path="/movies/:movieId/reviews" element={<Reviews />} />
+
+          <Route path="/movies/search/:type/:value" element={<SearchResults />} />
         </Routes>
       </Suspense>
     </div>
