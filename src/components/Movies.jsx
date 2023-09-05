@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { searchMovies } from './api';
 import { toast } from 'react-toastify';
@@ -14,6 +14,23 @@ const Title = styled.h2`
   color: #fff;
 `;
 
+const responsiveStyles = css`
+  @media (max-width: 576px) {
+    width: 100%; 
+    margin-bottom: 10px;
+  }
+
+  @media (min-width: 577px) and (max-width: 992px) {
+    width: calc(50% - 20px); 
+    margin-bottom: 10px;
+  }
+
+  @media (min-width: 993px) {
+    width: calc(33.33% - 20px); 
+    margin-bottom: 20px; 
+  }
+`;
+
 const SearchBar = styled.input`
   width: 300px;
   padding: 10px;
@@ -21,6 +38,8 @@ const SearchBar = styled.input`
   border-radius: 4px;
   margin-right: 10px;
   font-family: 'Arial', sans-serif;
+
+  ${responsiveStyles}
 `;
 
 const SearchButton = styled.button`
@@ -31,6 +50,8 @@ const SearchButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-family: 'Arial', sans-serif;
+
+  ${responsiveStyles}
 `;
 
 const BackButton = styled(Link)`
@@ -48,6 +69,8 @@ const BackButton = styled(Link)`
   &:hover {
     background-color: #ff5733;
   }
+
+  ${responsiveStyles}
 `;
 
 const MovieContainer = styled.div`
@@ -55,18 +78,19 @@ const MovieContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   margin-top: 20px;
+  ${responsiveStyles}
 `;
 
 const MovieItem = styled.div`
-  width: calc(33.33% - 20px);
-  margin-bottom: 20px;
   background-color: #f0f0f0;
   padding: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
-  
+
+  ${responsiveStyles}
+
   &:hover {
-    transform: scale(1.05); 
+    transform: scale(1.05);
   }
 `;
 
