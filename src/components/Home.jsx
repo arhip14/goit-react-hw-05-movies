@@ -10,8 +10,8 @@ const HomeContainer = styled.div`
   padding: 20px;
   color: white;
   min-height: 100vh; 
-    text-align: center;
-  font-family: 'Arial', sans-serif; 
+  text-align: center;
+  font-family: 'Arial', sans-serif;  
 `;
 
 const Title = styled.h2`
@@ -98,26 +98,26 @@ const Home = () => {
     fetchTrendingMovies();
   }, []);
 
-  const handleSearch = async () => {
-    try {
-      const response = await searchMovies(searchQuery);
-
-      if (!searchQuery.trim()) {
-        toast.error('Введіть текст для пошуку');
-        return;
-      }
-
-      setSearchResults(response.data.results);
-
-      if (response.data.results.length === 0) {
-        toast.info('Нічого не знайдено');
-      } else {
-        toast.success('Успішно знайдено');
-      }
-    } catch (error) {
-      console.error('Помилка пошуку фільмів:', error);
+const handleSearch = async () => {
+  try {
+    if (!searchQuery.trim()) {
+      toast.error('Введіть текст для пошуку');
+      return;
     }
-  };
+
+    const response = await searchMovies(searchQuery);
+
+    if (response.length === 0) {
+      toast.info('Нічого не знайдено');
+      setSearchResults([]);
+    } else {
+      toast.success('Успішно знайдено');
+      setSearchResults(response); 
+    }
+  } catch (error) {
+    console.error('Помилка пошуку фільмів:', error);
+  }
+};
 
   return (
     <HomeContainer>

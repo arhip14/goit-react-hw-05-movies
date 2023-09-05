@@ -5,9 +5,8 @@ import Header from './Header';
 const Home = lazy(() => import('./Home'));
 const Movies = lazy(() => import('./Movies'));
 const MovieDetails = lazy(() => import('./MovieDetails'));
-const Cast = lazy(() => import('./Cast'));
+const Cast = lazy(() => import('./Casts'));
 const Reviews = lazy(() => import('./Reviews'));
-const SearchResults = lazy(() => import('./SearchResults')); 
 
 const App = () => {
   return (
@@ -20,8 +19,6 @@ const App = () => {
           <Route path="/movies/:movieId" element={<MovieDetails />} />
           <Route path="/movies/:movieId/cast" element={<Cast />} />
           <Route path="/movies/:movieId/reviews" element={<Reviews />} />
-
-          <Route path="/movies/search/:type/:value" element={<SearchResults />} />
         </Routes>
       </Suspense>
     </div>

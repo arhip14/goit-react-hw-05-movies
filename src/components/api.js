@@ -1,7 +1,8 @@
-// api.js
 import axios from "axios";
 import { toast } from 'react-toastify';
+
 const API_KEY = 'f7ae4055ff38708d9955df5ca1f5f0c3';
+
 
 const api = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
@@ -9,6 +10,16 @@ const api = axios.create({
     api_key: API_KEY,
   },
 });
+
+export async function getMovieCast(movieId) {
+  try {
+    const response = await api.get(`/movie/${movieId}/credits`);
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
 export const getTrendingMovies = () => {
   return api.get('/trending/movie/week');

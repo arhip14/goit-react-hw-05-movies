@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
-import { getMovieDetails } from './api';
+import { getMovieDetails} from './api';
+import Reviews from './Reviews';
+import Casts from './Casts';
+
 
 const MovieDetailsContainer = styled.div`
   text-align: center;
@@ -10,12 +13,8 @@ const MovieDetailsContainer = styled.div`
   padding: 20px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   font-family: 'Arial', sans-serif;
-  margin: 20px;
-
-  @media (max-width: 768px) {
-    padding: 10px;
-  }
 `;
+
 
 const Title = styled.h2`
   font-size: 48px;
@@ -23,22 +22,12 @@ const Title = styled.h2`
   text-transform: uppercase;
   color: #e74c3c;
   animation: fadeIn 1s ease-in-out;
-
-  @media (max-width: 768px) {
-    font-size: 36px;
-  }
 `;
 
 const MovieInfo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 `;
 
 const MoviePoster = styled.img`
@@ -47,24 +36,10 @@ const MoviePoster = styled.img`
   border: 1px solid #ccc;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   animation: fadeIn 1s ease-in-out;
-
-  @media (max-width: 768px) {
-    max-width: 100%;
-    margin-right: 0;
-    margin-bottom: 20px;
-  }
 `;
 
 const MovieDescription = styled.div`
   text-align: left;
-  flex: 1;
-  margin-top: 20px;
-  padding-left: 20px; 
-
-  @media (max-width: 768px) {
-    width: 100%;
-    padding-left: 0; 
-  }
 `;
 
 const MovieTitle = styled.h3`
@@ -72,13 +47,9 @@ const MovieTitle = styled.h3`
   font-weight: bold;
   color: #0074d9;
   margin-top: 0;
-
-  @media (max-width: 768px) {
-    font-size: 28px;
-  }
 `;
 
-const BackButton = styled(Link)`
+const BackButton = styled.button`
   padding: 10px 20px;
   background-color: #0074d9;
   color: white;
@@ -89,15 +60,26 @@ const BackButton = styled(Link)`
   text-decoration: none;
   margin-top: 20px;
   display: inline-block;
+`;
 
-  &:hover {
-    background-color: #0056b3;
-  }
+const ToggleButton = styled.button`
+  padding: 10px 20px;
+  background-color: #0074d9;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Arial', sans-serif;
+  text-decoration: none;
+  margin: 20px 10px;
+  display: inline-block;
 `;
 
 const MovieDetails = () => {
   const { movieId } = useParams();
   const [movieDetails, setMovieDetails] = useState(null);
+  const [showReviews, setShowReviews] = useState(false); 
+  const [showCasts, setShowCasts] = useState(false); 
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -116,7 +98,10 @@ const MovieDetails = () => {
     <MovieDetailsContainer>
       <Title>Деталі фільму</Title>
 
-      <BackButton to="/">Повернутися назад</BackButton>
+      <Link to="/" style={{ textDecoration: 'none' }}>
+        <BackButton>Повернутися назад</BackButton>
+      </Link>
+
       {movieDetails && (
         <MovieInfo>
           <MoviePoster
@@ -131,6 +116,14 @@ const MovieDetails = () => {
           </MovieDescription>
         </MovieInfo>
       )}
+      <ToggleButton onClick={() => setShowReviews(!showReviews)}>
+        {showReviews ? 'Приховати відгуки' : 'Показати відгуки'}
+      </ToggleButton>
+      <ToggleButton onClick={() => setShowCasts(!showCasts)}>
+        {showCasts ? 'Приховати акторський склад' : 'Показати акторський склад'}
+      </ToggleButton>
+      {showReviews && <Reviews movieId={movieId} />}
+      {showCasts && <Casts movieId={movieId} />}
     </MovieDetailsContainer>
   );
 };

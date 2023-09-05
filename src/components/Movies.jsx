@@ -110,27 +110,30 @@ const Movies = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
-  const handleSearch = async () => {
-    try {
-      const response = await searchMovies(searchQuery);
+const handleSearch = async () => {
+  try {
+    const response = await searchMovies(searchQuery);
 
-      if (!searchQuery.trim()) {
-        toast.error('Введіть текст для пошуку');
-        return;
-      }
+    if (!searchQuery.trim()) {
+      toast.error('Введіть текст для пошуку');
+      return;
+    }
 
-      setSearchResults(response.data.results || []);
+    if (response && response.data && response.data.results) {
+      setSearchResults(response.data.results);
 
       if (response.data.results.length === 0) {
         toast.info('Нічого не знайдено');
       } else {
         toast.success('Успішно знайдено');
       }
-    } catch (error) {
-      console.error('Помилка пошуку фільмів:', error);
+    } else {
+      toast.info('Нічого не знайдено');
     }
-  };
-
+  } catch (error) {
+    console.error('Помилка пошуку фільмів:', error);
+  }
+};
   return (
     <MoviesContainer>
       <Title>Пошук фільмів</Title>
