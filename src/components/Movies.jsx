@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { searchMovies } from './api';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { FaSearch } from 'react-icons/fa';
 
 const MoviesContainer = styled.div`
@@ -184,11 +185,11 @@ const Movies = () => {
         toast.info('Нічого не знайдено');
         setSearchResults([]);
       } else {
-        toast.success('Успішно знайдено');
         setSearchResults(response);
       }
     } catch (error) {
       console.error('Помилка пошуку фільмів:', error);
+      toast.error('Помилка пошуку фільмів');
     }
   };
 
@@ -222,6 +223,7 @@ const Movies = () => {
             ))
           : null}
       </MovieContainer>
+      <ToastContainer autoClose={3000} />
     </MoviesContainer>
   );
 };
