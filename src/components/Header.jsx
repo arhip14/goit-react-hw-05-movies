@@ -14,8 +14,12 @@ const HeaderContainer = styled.header`
 
 const Logo = styled.h1`
   margin: 0;
-  font-family: 'Arial', sans-serif; 
-  font-size: 24px; 
+  font-family: 'Arial', sans-serif;
+  font-size: 24px;
+
+  @media (max-width: 576px) {
+    font-size: 20px; 
+  }
 `;
 
 const Nav = styled.nav``;
@@ -30,10 +34,18 @@ const NavLink = styled(Link)`
   &:hover {
     text-decoration: underline;
   }
+
+  @media (max-width: 576px) {
+    margin-right: 10px; 
+  }
 `;
 
 const IconWrapper = styled.span`
   margin-right: 5px;
+
+  @media (max-width: 576px) {
+    margin-right: 3px; 
+  }
 `;
 
 const Header = () => {

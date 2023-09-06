@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
-import { getMovieDetails} from './api';
+import { getMovieDetails } from './api';
 import Reviews from './Reviews';
 import Casts from './Casts';
 
-
 const MovieDetailsContainer = styled.div`
-  text-align: center;
-  background-color: #333;
   color: #fff;
   padding: 20px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   font-family: 'Arial', sans-serif;
-`;
+  text-align: center;
+  background: linear-gradient(to bottom, #333, #000);
+  padding: 20px;
+  color: white;
+  min-height: 100vh;
+  align-items: center;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
 
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
+`;
 
 const Title = styled.h2`
   font-size: 48px;
@@ -22,12 +30,24 @@ const Title = styled.h2`
   text-transform: uppercase;
   color: #e74c3c;
   animation: fadeIn 1s ease-in-out;
+
+  @media (max-width: 768px) {
+    font-size: 36px;
+  }
+
+  @media (max-width: 576px) {
+    font-size: 24px;
+  }
 `;
 
 const MovieInfo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const MoviePoster = styled.img`
@@ -36,10 +56,19 @@ const MoviePoster = styled.img`
   border: 1px solid #ccc;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   animation: fadeIn 1s ease-in-out;
+
+  @media (max-width: 768px) {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
 `;
 
 const MovieDescription = styled.div`
   text-align: left;
+
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 const MovieTitle = styled.h3`
@@ -47,6 +76,14 @@ const MovieTitle = styled.h3`
   font-weight: bold;
   color: #0074d9;
   margin-top: 0;
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
+
+  @media (max-width: 576px) {
+    font-size: 20px;
+  }
 `;
 
 const BackButton = styled.button`
@@ -60,6 +97,11 @@ const BackButton = styled.button`
   text-decoration: none;
   margin-top: 20px;
   display: inline-block;
+
+  @media (max-width: 576px) {
+    padding: 8px 16px;
+    font-size: 16px;
+  }
 `;
 
 const ToggleButton = styled.button`
@@ -73,13 +115,18 @@ const ToggleButton = styled.button`
   text-decoration: none;
   margin: 20px 10px;
   display: inline-block;
+
+  @media (max-width: 576px) {
+    padding: 8px 16px;
+    font-size: 16px;
+  }
 `;
 
 const MovieDetails = () => {
   const { movieId } = useParams();
   const [movieDetails, setMovieDetails] = useState(null);
-  const [showReviews, setShowReviews] = useState(false); 
-  const [showCasts, setShowCasts] = useState(false); 
+  const [showReviews, setShowReviews] = useState(false);
+  const [showCasts, setShowCasts] = useState(false);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {

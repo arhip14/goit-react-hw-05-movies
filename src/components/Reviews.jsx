@@ -1,13 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { getMovieReviews } from './api';
-
 const ReviewsContainer = styled.div`
-  /* Ваші стилі для контейнера відгуків */
+  background-color: #333;
+  color: white;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  margin-top: 20px;
 `;
 
 const ReviewItem = styled.div`
-  /* Ваші стилі для окремого відгуку */
+  border-top: 1px solid #ccc;
+  padding: 10px 0;
+
+  &:first-child {
+    border-top: none; 
+  }
+`;
+
+const ReviewAuthor = styled.div`
+  font-weight: bold;
+  margin-bottom: 5px;
+`;
+
+const ReviewContent = styled.div`
+  margin-top: 5px;
 `;
 
 const Reviews = ({ movieId }) => {
@@ -32,8 +50,8 @@ const Reviews = ({ movieId }) => {
       <ul>
         {reviews.map((review) => (
           <ReviewItem key={review.id}>
-            <p>{review.author}</p>
-            <p>{review.content}</p>
+            <ReviewAuthor>{review.author}</ReviewAuthor>
+            <ReviewContent>{review.content}</ReviewContent>
           </ReviewItem>
         ))}
       </ul>

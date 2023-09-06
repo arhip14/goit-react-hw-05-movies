@@ -3,39 +3,93 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { getTrendingMovies, searchMovies } from './api';
 import { toast } from 'react-toastify';
+import { FaSearch } from 'react-icons/fa';
 
 const HomeContainer = styled.div`
   text-align: center;
   background: linear-gradient(to bottom, #333, #000);
   padding: 20px;
   color: white;
-  min-height: 100vh; 
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  font-family: 'Arial', sans-serif;  
+  font-family: 'Arial', sans-serif;
 `;
 
 const Title = styled.h2`
   font-size: 48px;
   margin-bottom: 20px;
   text-transform: uppercase;
-  color: #fff; 
+  color: #fff;
+
+  @media (max-width: 768px) {
+    font-size: 36px; 
+  }
+
+  @media (max-width: 576px) {
+    font-size: 24px; 
+  }
 `;
 
-const SearchBar = styled.input`
-  width: 300px;
+const SearchBar = styled.div`
+  display: flex;
+  align-items: center;
+  width: 400px; 
+
+  @media (max-width: 768px) {
+    width: 300px; 
+  }
+
+  @media (max-width: 576px) {
+    width: 100%; 
+  }
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 4px;
-  margin-right: 10px;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  &:focus {
+    outline: none; 
+  }
 `;
 
 const SearchButton = styled.button`
-  padding: 10px 20px;
+  padding: 6px 12px;
   background-color: #0074d9;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 16px;
+  margin-left: 10px;
+
+  svg {
+    margin-right: 5px;
+    font-size: 18px;
+  }
+
+  &:hover {
+    background-color: #ff5733;
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 576px) {
+    padding: 4px 8px; 
+  }
 `;
 
 const MovieContainer = styled.div`
@@ -52,20 +106,36 @@ const MovieItem = styled.div`
   padding: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease-in-out;
-  
+
   &:hover {
     transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    width: calc(50% - 20px);
+  }
+
+  @media (max-width: 576px) {
+    width: 100%; 
   }
 `;
 
 const MovieTitle = styled.h3`
   font-size: 20px;
   font-weight: bold;
-  color: white; 
+  color: white;
   text-transform: uppercase;
   margin: 10px 0;
-  user-select: none; 
-  text-decoration: none; 
+  user-select: none;
+  text-decoration: none;
+
+  @media (max-width: 768px) {
+    font-size: 18px; 
+  }
+
+  @media (max-width: 576px) {
+    font-size: 16px; 
+  }
 `;
 
 const MovieImage = styled.img`
@@ -98,39 +168,42 @@ const Home = () => {
     fetchTrendingMovies();
   }, []);
 
-const handleSearch = async () => {
-  try {
-    if (!searchQuery.trim()) {
-      toast.error('Введіть текст для пошуку');
-      return;
-    }
+  const handleSearch = async () => {
+    try {
+      if (!searchQuery.trim()) {
+        toast.error('Введіть текст для пошуку');
+        return;
+      }
 
-    const response = await searchMovies(searchQuery);
+      const response = await searchMovies(searchQuery);
 
-    if (response.length === 0) {
-      toast.info('Нічого не знайдено');
-      setSearchResults([]);
-    } else {
-      toast.success('Успішно знайдено');
-      setSearchResults(response); 
+      if (response.length === 0) {
+        toast.info('Нічого не знайдено');
+        setSearchResults([]);
+      } else {
+        toast.success('Успішно знайдено');
+        setSearchResults(response);
+      }
+    } catch (error) {
+      console.error('Помилка пошуку фільмів:', error);
     }
-  } catch (error) {
-    console.error('Помилка пошуку фільмів:', error);
-  }
-};
+  };
 
   return (
     <HomeContainer>
       <Title>Популярні фільми</Title>
-      <div>
-        <SearchBar
+      <SearchBar>
+        <SearchInput
           type="text"
           placeholder="Пошук фільмів"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <SearchButton onClick={handleSearch}>Пошук</SearchButton>
-      </div>
+        <SearchButton onClick={handleSearch}>
+          <FaSearch />
+          Пошук
+        </SearchButton>
+      </SearchBar>
       <MovieContainer>
         {searchResults.length > 0
           ? searchResults.map((movie) => (

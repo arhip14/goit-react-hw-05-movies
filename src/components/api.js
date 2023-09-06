@@ -1,8 +1,7 @@
-import axios from "axios";
-import { toast } from 'react-toastify';
+import axios from 'axios';
+import { toast } from 'react-toastify'; // Додайте імпорт toast
 
 const API_KEY = 'f7ae4055ff38708d9955df5ca1f5f0c3';
-
 
 const api = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
@@ -10,16 +9,9 @@ const api = axios.create({
     api_key: API_KEY,
   },
 });
-
-export async function getMovieCast(movieId) {
-  try {
-    const response = await api.get(`/movie/${movieId}/credits`);
-    console.log('API Response:', response.data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-}
+export const getMovieCredits = (movieId) => {
+  return api.get(`/movie/${movieId}/credits`);
+};
 
 export const getTrendingMovies = () => {
   return api.get('/trending/movie/week');
@@ -36,7 +28,7 @@ export const searchMovies = async (query) => {
         query,
       },
     });
-  
+
     const results = response.data.results;
 
     if (results.length === 0) {
@@ -48,7 +40,7 @@ export const searchMovies = async (query) => {
     return results;
   } catch (error) {
     throw error;
-  };
+  }
 };
 
 export const searchMoviesByLetter = async (letter) => {
@@ -62,7 +54,7 @@ export const searchMoviesByLetter = async (letter) => {
         query: letter,
       },
     });
-  
+
     const results = response.data.results;
 
     if (results.length === 0) {
@@ -74,7 +66,7 @@ export const searchMoviesByLetter = async (letter) => {
     return results;
   } catch (error) {
     throw error;
-  };
+  }
 };
 
 export const searchMoviesByTitle = async (title) => {
@@ -88,7 +80,7 @@ export const searchMoviesByTitle = async (title) => {
         query: title,
       },
     });
-  
+
     const results = response.data.results;
 
     if (results.length === 0) {
@@ -100,7 +92,7 @@ export const searchMoviesByTitle = async (title) => {
     return results;
   } catch (error) {
     throw error;
-  };
+  }
 };
 
 export const getMovieDetails = (movieId) => {
