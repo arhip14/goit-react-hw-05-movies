@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { searchMovies } from './api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -65,6 +65,12 @@ const BackButton = styled(Link)`
     padding: 8px 16px;
     font-size: 16px;
   }
+`;
+
+const SearchForm = styled.form`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const SearchBar = styled.input`
@@ -171,42 +177,58 @@ const MovieTitle = styled.h3`
 const Movies = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async (query) => {
     try {
-      if (!searchQuery.trim()) {
+      if (!query.trim()) {
         toast.error('Введіть текст для пошуку');
         return;
       }
 
-      const response = await searchMovies(searchQuery);
+      const response = await searchMovies(query);
 
       if (response.length === 0) {
         toast.info('Нічого не знайдено');
         setSearchResults([]);
       } else {
         setSearchResults(response);
+        const searchParams = new URLSearchParams();
+        searchParams.set('q', query);
+        navigate(`?${searchParams.toString()}`);
       }
     } catch (error) {
       console.error('Помилка пошуку фільмів:', error);
       toast.error('Помилка пошуку фільмів');
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const query = searchParams.get('q');
+    if (query) {
+      setSearchQuery(query);
+      handleSearch(query);
+    }
+  }, [location.search, handleSearch]);
 
   return (
     <MoviesContainer>
       <Title>Пошук фільмів</Title>
       <SearchContainer>
         <BackButton to="/">Повернутися назад</BackButton>
-        <SearchBar
-          type="text"
-          placeholder="Пошук фільмів"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <SearchButton onClick={handleSearch}>
-          <FaSearch /> Пошук
-        </SearchButton>
+        <SearchForm onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
+          <SearchBar
+            type="text"
+            placeholder="Пошук фільмів"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <SearchButton type="submit">
+            <FaSearch /> Пошук
+          </SearchButton>
+        </SearchForm>
       </SearchContainer>
       <MovieContainer>
         {searchResults && searchResults.length > 0

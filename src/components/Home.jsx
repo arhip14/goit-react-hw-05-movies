@@ -4,7 +4,7 @@ import { getTrendingMovies, searchMovies } from './api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaSearch } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const HomeContainer = styled.div`
   text-align: center;
@@ -147,6 +147,7 @@ const MovieImage = styled.img`
 `;
 
 const Home = () => {
+  const navigate = useNavigate();
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -186,6 +187,7 @@ const Home = () => {
       } else {
         setSearchResults(response);
       }
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     } catch (error) {
       console.error('Помилка пошуку фільмів:', error);
     }
@@ -195,19 +197,26 @@ const Home = () => {
     <HomeContainer>
       <Title>Популярні фільми</Title>
       <SearchBar>
-        <SearchInput
-          type="text"
-          placeholder="Пошук фільмів"
-          value={inputReset ? '' : searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setInputReset(false);
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSearch();
           }}
-        />
-        <SearchButton onClick={handleSearch}>
-          <FaSearch />
-          Пошук
-        </SearchButton>
+        >
+          <SearchInput
+            type="text"
+            placeholder="Пошук фільмів"
+            value={inputReset ? '' : searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setInputReset(false);
+            }}
+          />
+          <SearchButton type="submit">
+            <FaSearch />
+            Пошук
+          </SearchButton>
+        </form>
       </SearchBar>
       <MovieContainer>
         {searchResults.length > 0

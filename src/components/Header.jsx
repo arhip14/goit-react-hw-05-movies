@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { AiFillHome, AiOutlineVideoCamera } from 'react-icons/ai';
 
@@ -18,13 +18,13 @@ const Logo = styled.h1`
   font-size: 24px;
 
   @media (max-width: 576px) {
-    font-size: 20px; 
+    font-size: 20px;
   }
 `;
 
 const Nav = styled.nav``;
 
-const NavLink = styled(Link)`
+const NavLinkStyled = styled(Link)`
   color: #fff;
   text-decoration: none;
   margin-right: 20px;
@@ -35,8 +35,13 @@ const NavLink = styled(Link)`
     text-decoration: underline;
   }
 
+  /* Підсвічуємо активну сторінку */
+  &.active {
+    font-weight: bold;
+  }
+
   @media (max-width: 576px) {
-    margin-right: 10px; 
+    margin-right: 10px;
   }
 `;
 
@@ -44,27 +49,31 @@ const IconWrapper = styled.span`
   margin-right: 5px;
 
   @media (max-width: 576px) {
-    margin-right: 3px; 
+    margin-right: 3px;
   }
 `;
 
 const Header = () => {
+  const location = useLocation();
+  const isHomeActive = location.pathname === '/';
+  const isMoviesActive = location.pathname.startsWith('/movies');
+
   return (
     <HeaderContainer>
       <Logo>My Movie App</Logo>
       <Nav>
-        <NavLink to="/">
+        <NavLinkStyled to="/" className={isHomeActive ? 'active' : ''}>
           <IconWrapper>
             <AiFillHome />
           </IconWrapper>
           <span style={{ fontFamily: 'Arial', fontSize: '18px' }}>Home</span>
-        </NavLink>
-        <NavLink to="/movies">
+        </NavLinkStyled>
+        <NavLinkStyled to="/movies" className={isMoviesActive ? 'active' : ''}>
           <IconWrapper>
             <AiOutlineVideoCamera />
           </IconWrapper>
           <span style={{ fontFamily: 'Arial', fontSize: '18px' }}>Movies</span>
-        </NavLink>
+        </NavLinkStyled>
       </Nav>
     </HeaderContainer>
   );

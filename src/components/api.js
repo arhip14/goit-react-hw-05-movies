@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { toast } from 'react-toastify'; // Додайте імпорт toast
+import { toast } from 'react-toastify';
 
 const API_KEY = 'f7ae4055ff38708d9955df5ca1f5f0c3';
 
