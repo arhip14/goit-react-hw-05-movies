@@ -196,7 +196,7 @@ const Movies = () => {
         setSearchResults(response);
         const searchParams = new URLSearchParams();
         searchParams.set('q', query);
-        navigate(`?${searchParams.toString()}`);
+        navigate(`/search?${searchParams.toString()}`);
       }
     } catch (error) {
       console.error('Помилка пошуку фільмів:', error);

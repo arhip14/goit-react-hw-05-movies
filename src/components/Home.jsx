@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { getTrendingMovies, searchMovies } from './api';
-import { ToastContainer, toast } from 'react-toastify';
+import { getTrendingMovies } from './api';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FaSearch } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const HomeContainer = styled.div`
   text-align: center;
@@ -31,65 +30,6 @@ const Title = styled.h2`
 
   @media (max-width: 576px) {
     font-size: 24px;
-  }
-`;
-
-const SearchBar = styled.div`
-  display: flex;
-  align-items: center;
-  width: 400px;
-
-  @media (max-width: 768px) {
-    width: 300px;
-  }
-
-  @media (max-width: 576px) {
-    width: 100%;
-  }
-`;
-
-const SearchInput = styled.input`
-  flex: 1;
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-
-  &:focus {
-    outline: none;
-  }
-`;
-
-const SearchButton = styled.button`
-  padding: 6px 12px;
-  background-color: #0074d9;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: 'Arial', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  font-size: 16px;
-  margin-left: 10px;
-
-  svg {
-    margin-right: 5px;
-    font-size: 18px;
-  }
-
-  &:hover {
-    background-color: #ff5733;
-    transform: scale(1.05);
-  }
-
-  @media (max-width: 576px) {
-    padding: 4px 8px;
   }
 `;
 
@@ -147,11 +87,7 @@ const MovieImage = styled.img`
 `;
 
 const Home = () => {
-  const navigate = useNavigate();
   const [trendingMovies, setTrendingMovies] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [inputReset, setInputReset] = useState(false);
 
   useEffect(() => {
     const fetchTrendingMovies = async () => {
@@ -166,82 +102,21 @@ const Home = () => {
     fetchTrendingMovies();
   }, []);
 
-  const handleSearch = async () => {
-    try {
-      if (!searchQuery.trim()) {
-        toast.error('Введіть текст для пошуку', {
-          position: 'top-right',
-          autoClose: 3000,
-        });
-        return;
-      }
-
-      const response = await searchMovies(searchQuery);
-
-      if (response.length === 0) {
-        toast.info('Нічого не знайдено', {
-          position: 'top-right',
-          autoClose: 3000,
-        });
-        setSearchResults([]);
-      } else {
-        setSearchResults(response);
-      }
-      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-    } catch (error) {
-      console.error('Помилка пошуку фільмів:', error);
-    }
-  };
-
   return (
     <HomeContainer>
       <Title>Популярні фільми</Title>
-      <SearchBar>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSearch();
-          }}
-        >
-          <SearchInput
-            type="text"
-            placeholder="Пошук фільмів"
-            value={inputReset ? '' : searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setInputReset(false);
-            }}
-          />
-          <SearchButton type="submit">
-            <FaSearch />
-            Пошук
-          </SearchButton>
-        </form>
-      </SearchBar>
       <MovieContainer>
-        {searchResults.length > 0
-          ? searchResults.map((movie) => (
-              <MovieItem key={movie.id}>
-                <Link to={`/movies/${movie.id}`}>
-                  <MovieImage
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    alt={movie.title}
-                  />
-                  <MovieTitle>{movie.title}</MovieTitle>
-                </Link>
-              </MovieItem>
-            ))
-          : trendingMovies.map((movie) => (
-              <MovieItem key={movie.id}>
-                <Link to={`/movies/${movie.id}`}>
-                  <MovieImage
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    alt={movie.title}
-                  />
-                  <MovieTitle>{movie.title}</MovieTitle>
-                </Link>
-              </MovieItem>
-            ))}
+        {trendingMovies.map((movie) => (
+          <MovieItem key={movie.id}>
+            <Link to={`/movies/${movie.id}`}>
+              <MovieImage
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+              />
+              <MovieTitle>{movie.title}</MovieTitle>
+            </Link>
+          </MovieItem>
+        ))}
       </MovieContainer>
       <ToastContainer autoClose={3000} />
     </HomeContainer>
