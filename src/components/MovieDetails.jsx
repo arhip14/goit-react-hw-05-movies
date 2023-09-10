@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { getMovieDetails } from './api';
 import Reviews from './Reviews';
 import Casts from './Casts';
@@ -26,7 +26,7 @@ const MovieDetailsContainer = styled.div`
 
 const Title = styled.h2`
   font-size: 48px;
-  margin-bottom: 20px;
+  margin bottom: 20px;
   text-transform: uppercase;
   color: #e74c3c;
   animation: fadeIn 1s ease-in-out;
@@ -86,7 +86,7 @@ const MovieTitle = styled.h3`
   }
 `;
 
-const BackButton = styled.button`
+const HomeButton = styled.button`
   padding: 10px 20px;
   background-color: #0074d9;
   color: white;
@@ -96,6 +96,7 @@ const BackButton = styled.button`
   font-family: 'Arial', sans-serif;
   text-decoration: none;
   margin-top: 20px;
+  margin-left: 20px;
   display: inline-block;
 
   @media (max-width: 576px) {
@@ -128,25 +129,29 @@ const MovieDetails = () => {
   const [showReviews, setShowReviews] = useState(false);
   const [showCasts, setShowCasts] = useState(false);
 
+  const location = useLocation();
+
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
         const response = await getMovieDetails(movieId);
         setMovieDetails(response.data);
       } catch (error) {
-        console.error('Помилка завантаження деталей фільму:', error);
+        console.error('Error loading movie details:', error);
       }
     };
 
     fetchMovieDetails();
   }, [movieId]);
 
+  const searchQuery = new URLSearchParams(location.search).get('q');
+
   return (
     <MovieDetailsContainer>
-      <Title>Деталі фільму</Title>
+      <Title>Movie Details</Title>
 
-      <Link to="/" style={{ textDecoration: 'none' }}>
-        <BackButton>Повернутися назад</BackButton>
+      <Link to={searchQuery ? `/movies?q=${searchQuery}` : '/'}>
+        <HomeButton>Повернутися Назад</HomeButton>
       </Link>
 
       {movieDetails && (
@@ -157,17 +162,17 @@ const MovieDetails = () => {
           />
           <MovieDescription>
             <MovieTitle>{movieDetails.title}</MovieTitle>
-            <p>Рейтинг: {movieDetails.vote_average}</p>
-            <p>Дата виходу: {movieDetails.release_date}</p>
-            <p>Опис: {movieDetails.overview}</p>
+            <p>Rating: {movieDetails.vote_average}</p>
+            <p>Release Date: {movieDetails.release_date}</p>
+            <p>Description: {movieDetails.overview}</p>
           </MovieDescription>
         </MovieInfo>
       )}
       <ToggleButton onClick={() => setShowReviews(!showReviews)}>
-        {showReviews ? 'Приховати відгуки' : 'Показати відгуки'}
+        {showReviews ? 'Hide Reviews' : 'Show Reviews'}
       </ToggleButton>
       <ToggleButton onClick={() => setShowCasts(!showCasts)}>
-        {showCasts ? 'Приховати акторський склад' : 'Показати акторський склад'}
+        {showCasts ? 'Hide Casts' : 'Show Casts'}
       </ToggleButton>
       {showReviews && <Reviews movieId={movieId} />}
       {showCasts && <Casts movieId={movieId} />}

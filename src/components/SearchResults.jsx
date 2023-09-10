@@ -87,13 +87,30 @@ const MovieTitle = styled.h3`
   text-transform: uppercase;
 `;
 
+const HomeButton = styled.button`
+  padding: 10px 20px;
+  background-color: #0074d9;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Arial', sans-serif;
+  text-decoration: none;
+  margin-top: 20px;
+  display: inline-block;
+
+  @media (max-width: 576px) {
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+`;
+
 const SearchResult = () => {
   const location = useLocation();
   const [searchResults, setSearchResults] = useState([]);
+  const searchQuery = new URLSearchParams(location.search).get('q');
 
   useEffect(() => {
-    const searchQuery = new URLSearchParams(location.search).get('q');
-
     if (searchQuery) {
       searchMovies(searchQuery)
         .then((response) => {
@@ -103,16 +120,19 @@ const SearchResult = () => {
           console.error('Помилка пошуку фільмів:', error);
         });
     }
-  }, [location.search]);
+  }, [searchQuery]);
 
   return (
     <SearchResultContainer>
       <Title>Результати пошуку фільмів</Title>
+      <Link to="/" style={{ textDecoration: 'none' }}>
+        <HomeButton>На головну</HomeButton>
+      </Link>
       <MovieContainer>
         {searchResults && searchResults.length > 0
           ? searchResults.map((movie) => (
               <MovieItem key={movie.id}>
-                <Link to={`/movies/${movie.id}`}>
+                <Link to={`/movies/${movie.id}?q=${searchQuery}`}>
                   <MovieImage
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     alt={movie.title}
